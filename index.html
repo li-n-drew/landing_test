@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>CashBack Guide — Умный выбор карты</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      /* Светлая палитра */
+      --bg-body: #FFFFFF;
+      --bg-soft: #F8FAFC;
+      
+      --text-main: #0F172A;
+      --text-secondary: #475569;
+      
+      --primary: #2563EB;
+      --primary-hover: #1D4ED8;
+      
+      --border: #E2E8F0;
+      --radius-xl: 24px;
+      --radius-lg: 16px;
+      
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      --shadow-blue: 0 10px 30px -10px rgba(37, 99, 235, 0.4);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 28px;
+      border-radius: 100px;
+      font-weight: 600;
+      font-size: 16px;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+      box-shadow: var(--shadow-blue);
+    }
+    .btn-primary:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+    .btn-secondary {
+      background-color: #EFF6FF;
+      color: var(--primary);
+    }
+    .btn-secondary:hover {
+      background-color: #DBEAFE;
+    }
+
+    /* Navigation */
+    nav {
+      padding: 20px 0;
+      border-bottom: 1px solid var(--bg-soft);
+    }
+    .nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      font-weight: 800;
+      font-size: 20px;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .logo-icon {
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, #2563EB, #60A5FA);
+      border-radius: 8px;
+      color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: bold; font-size: 18px;
+    }
+
+    /* HERO SECTION */
+    .hero {
+      padding: 80px 0 40px;
+      background: radial-gradient(circle at 50% 0%, #EFF6FF 0%, transparent 70%);
+      overflow: hidden;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 60px;
+      align-items: center;
+    }
+    .hero-content h1 {
+      font-size: clamp(36px, 4.5vw, 56px);
+      line-height: 1.1;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+    }
+    .hero-content h1 span { color: var(--primary); }
+    .hero-content p {
+      font-size: 18px;
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+      max-width: 540px;
+    }
+    .trust-badges {
+      display: flex;
+      gap: 24px;
+      margin-top: 40px;
+      padding-top: 30px;
+      border-top: 1px solid var(--border);
+    }
+    .trust-item {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 14px; color: var(--text-secondary); font-weight: 500;
+    }
+    .trust-icon {
+      color: #10B981; background: #D1FAE5;
+      width: 20px; height: 20px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; font-size: 12px;
+    }
+
+    /* --- PHONE MOCKUP --- */
+    .phone-mockup {
+      background: #FFFFFF;
+      border-radius: 40px 40px 0 0;
+      border: 8px solid #E2E8F0;
+      border-bottom: none;
+      /* Тень смещена влево */
+      box-shadow: -25px 40px 80px -15px rgba(50, 60, 85, 0.25);
+      padding: 16px 16px 0 16px;
+      width: 100%;
+      max-width: 340px;
+      margin: 0 auto;
+      height: 500px; 
+      overflow: hidden; 
+      position: relative;
+      
+      transform: perspective(1000px) rotate(6deg) rotateY(-20deg) rotateX(10deg) translateY(20px);
+      transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    
+    .phone-mockup:hover { 
+      transform: perspective(1000px) rotate(0deg) rotateY(0deg) rotateX(0deg) translateY(20px); 
+    }
+    
+    .app-screen {
+      background: #F1F5F9;
+      height: 100%; 
+      border-radius: 24px 24px 0 0;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    /* Fade-out эффект внизу */
+    .app-screen::after {
+      content: "";
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 150px;
+      background: linear-gradient(to bottom, rgba(241,245,249,0) 0%, rgba(241,245,249,1) 90%);
+      pointer-events: none;
+    }
+
+    .app-header {
+      background: white;
+      padding: 20px 16px 12px;
+      border-bottom: 1px solid #E2E8F0;
+      font-weight: 700;
+      font-size: 16px;
+      display: flex; justify-content: space-between;
+    }
+    .app-body {
+      padding: 16px;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    
+    .ui-card {
+      background: white;
+      padding: 12px;
+      border-radius: 12px;
+      box-shadow: var(--shadow-sm);
+      display: flex; gap: 12px; align-items: center;
+    }
+    .ui-icon {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      background: #EFF6FF; color: var(--primary);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .ui-text h4 { font-size: 14px; margin-bottom: 2px; }
+    .ui-text p { font-size: 11px; color: #64748B; }
+    .ui-badge {
+      margin-left: auto;
+      background: #DCFCE7; color: #166534;
+      padding: 4px 8px; border-radius: 6px;
+      font-size: 12px; font-weight: 700;
+    }
+
+    /* --- FEATURES GRID --- */
+    .section-features {
+      padding: 80px 0;
+      background: var(--bg-body);
+    }
+    .section-header {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto 60px;
+    }
+    .tag {
+      text-transform: uppercase;
+      font-size: 12px; font-weight: 700; letter-spacing: 1px;
+      color: var(--primary); background: #EFF6FF;
+      padding: 6px 12px; border-radius: 100px;
+      display: inline-block; margin-bottom: 16px;
+    }
+    .section-header h2 { font-size: 32px; margin-bottom: 16px; }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: 1fr; 
+      gap: 32px;
+    }
+    
+    @media (min-width: 768px) {
+      .feature-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .feature-card {
+      background: var(--bg-soft);
+      padding: 40px; 
+      border-radius: var(--radius-xl);
+      transition: all 0.3s;
+      border: 1px solid transparent;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .feature-card:hover {
+      background: white;
+      box-shadow: var(--shadow-xl);
+      border-color: var(--border);
+      transform: translateY(-5px);
+    }
+    .feature-icon-lg {
+      width: 56px; height: 56px;
+      background: white;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-sm);
+      color: var(--primary);
+    }
+    .feature-card h3 { font-size: 22px; margin-bottom: 12px; }
+    .feature-card p { font-size: 16px; line-height: 1.6; color: var(--text-secondary); }
+
+    /* AUDIENCE & FAQ */
+    .section-audience {
+      padding: 80px 0;
+      background: #F8FAFC;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .audience-list {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 40px;
+    }
+    .audience-item h3 {
+      font-size: 18px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+    }
+    .check-circle {
+      width: 20px; height: 20px; background: var(--primary); color: white;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px;
+    }
+
+    .section-faq { padding: 80px 0; }
+    .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+    .faq-item { margin-bottom: 24px; }
+    .faq-item h4 { font-size: 16px; margin-bottom: 8px; color: var(--text-main); }
+    .faq-item p { font-size: 14px; color: var(--text-secondary); }
+
+    /* --- CTA FORM SECTION --- */
+    .section-cta {
+      background: #1E293B;
+      color: white;
+      padding: 80px 0;
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    }
+    .cta-container { max-width: 600px; margin: 0 auto; text-align: center; }
+    
+    /* Стиль для контейнера iframe, чтобы убрать лишние отступы */
+    .cta-form {
+      background: white;
+      padding: 0; /* Убираем padding, чтобы форма занимала все место */
+      border-radius: var(--radius-lg);
+      margin-top: 40px;
+      color: var(--text-main);
+      text-align: left;
+      overflow: hidden;
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid { grid-template-columns: 1fr; text-align: center; gap: 40px; }
+      .hero-content p { margin: 0 auto 32px; }
+      .trust-badges { justify-content: center; flex-wrap: wrap; }
+      .audience-list { grid-template-columns: 1fr; gap: 24px; }
+      .faq-grid { grid-template-columns: 1fr; }
+      .phone-mockup { transform: rotate(0deg); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <nav>
+    <div class="nav-inner">
+      <div class="logo">
+        <div class="logo-icon">%</div>
+        CashBack Guide
+      </div>
+      <a href="#join" class="btn btn-secondary" style="padding: 10px 20px; font-size: 14px;">Участвовать в тесте</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-grid">
+      <div class="hero-content">
+        <h1>Персональный гид: <span>какой картой платить</span> прямо сейчас</h1>
+        <p>Вам не нужно запоминать категории и проценты. Приложение подскажет самую выгодную карту для каждой покупки. Без доступа к вашим банковским счетам.</p>
+        
+        <div style="display: flex; gap: 12px; justify-content: flex-start; flex-wrap: wrap;" class="hero-buttons-wrapper">
+          <a href="#join" class="btn btn-primary">Стать тестировщиком</a>
+          <a href="#features" class="btn btn-secondary">Как это работает?</a>
+        </div>
+
+        <div class="trust-badges">
+          <div class="trust-item">
+            <span class="trust-icon">✓</span> MVP уже работает
+          </div>
+          <div class="trust-item">
+            <span class="trust-icon">✓</span> Бесплатное участие
+          </div>
+          <div class="trust-item">
+            <span class="trust-icon">✓</span> Полная анонимность
+          </div>
+        </div>
+      </div>
+
+      <!-- Phone Mockup -->
+      <div class="phone-mockup">
+        <div class="app-screen">
+          <div class="app-header">
+            <span>14:30</span>
+            <span>🔋 100%</span>
+          </div>
+          <div class="app-body">
+            <!-- Гео уведомление -->
+            <div class="ui-card" style="background: #EFF6FF; border: 1px solid #BFDBFE;">
+              <div class="ui-icon">📍</div>
+              <div class="ui-text">
+                <h4>Вы в "Азбуке Вкуса"</h4>
+                <p>Рекомендуем карту для продуктов</p>
+              </div>
+            </div>
+
+            <!-- Карточка рекомендации -->
+            <div class="ui-card">
+              <div class="ui-icon" style="background: #000; color: #FFF;">💳</div>
+              <div class="ui-text">
+                <h4>Tinkoff Black</h4>
+                <p>Повышенный кэшбэк 5%</p>
+              </div>
+              <div class="ui-badge">+150₽</div>
+            </div>
+
+            <!-- Поиск -->
+            <div style="margin-top: 8px;">
+              <div style="font-size: 12px; color: #64748B; margin-bottom: 8px; font-weight: 600;">БЫСТРЫЙ ПОИСК</div>
+              <div class="ui-card" style="color: #94A3B8;">
+                🔍 Аптеки...
+              </div>
+            </div>
+            
+            <!-- Fading element -->
+            <div style="margin-top: 12px; background: white; padding: 16px; border-radius: 16px; opacity: 0.8;">
+               <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                <span style="font-size:12px; font-weight:600;">Ваша выгода</span>
+                <span style="font-size:12px; color:#16A34A; font-weight:700;">+2 450 ₽</span>
+              </div>
+              <div style="height:6px; width:100%; background:#F1F5F9; border-radius:10px;">
+                <div style="height:100%; width:70%; background:#2563EB; border-radius:10px;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- FEATURES -->
+  <section id="features" class="section-features">
+    <div class="container">
+      <div class="section-header">
+        <span class="tag">Возможности</span>
+        <h2>Что уже умеет приложение</h2>
+        <p style="color: var(--text-secondary);">Мы запустили MVP с 4 ключевыми функциями, чтобы вы перестали терять деньги на ровном месте.</p>
+      </div>
+
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon-lg">📝</div>
+          <h3>Ручной ввод данных</h3>
+          <p>Вы сами добавляете свои карты, категории и проценты. Никаких логинов от банков, никаких рисков утечки финансовых данных. Полный контроль над информацией.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon-lg">🔍</div>
+          <h3>Умный поиск</h3>
+          <p>Не помните, какая карта дает кэшбэк на такси? Введите категорию в поиске, и мы покажем лучший вариант моментально. Работает быстро даже при плохом интернете.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-lg">🔔</div>
+          <h3>Гео-пуши</h3>
+          <p>Приложение понимает, что вы зашли в супермаркет (по локальной базе магазинов), и присылает уведомление с нужной картой. Не нужно держать условия в голове.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-lg">📈</div>
+          <h3>Калькулятор выгоды</h3>
+          <p>Мы посчитаем максимальный потенциальный кэшбэк исходя из ваших лимитов и трат. Узнайте, сколько денег реально "лежит на столе", если оптимизировать траты.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AUDIENCE -->
+  <section class="section-audience">
+    <div class="container">
+      <div class="section-header" style="margin-bottom: 30px;">
+        <span class="tag">Аудитория</span>
+        <h2>Для кого это приложение?</h2>
+      </div>
+      <div class="audience-list">
+        <div class="audience-item">
+          <h3><span class="check-circle">✓</span> Владельцам 2+ карт</h3>
+          <p style="font-size: 14px; color: var(--text-secondary);">Если у вас несколько карт разных банков, вы наверняка путаетесь в категориях месяца. Мы решим эту проблему.</p>
+        </div>
+        <div class="audience-item">
+          <h3><span class="check-circle">✓</span> Приватным пользователям</h3>
+          <p style="font-size: 14px; color: var(--text-secondary);">Для тех, кто не хочет давать сторонним приложениям доступ к истории операций и СМС.</p>
+        </div>
+        <div class="audience-item">
+          <h3><span class="check-circle">✓</span> Охотникам за выгодой</h3>
+          <p style="font-size: 14px; color: var(--text-secondary);">Для тех, кто хочет выжимать максимум из программ лояльности, но тратить на это минимум времени.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section-faq">
+    <div class="container">
+      <h2 style="margin-bottom: 40px; font-size: 28px;">Частые вопросы</h2>
+      <div class="faq-grid">
+        <div class="faq-column">
+          <div class="faq-item">
+            <h4>Это безопасно?</h4>
+            <p>Абсолютно. Приложение работает локально с данными, которые вы ввели сами. У нас нет доступа к вашим счетам.</p>
+          </div>
+          <div class="faq-item">
+            <h4>Сколько стоит участие?</h4>
+            <p>Тестирование бесплатное. Мы ищем 20-50 активных пользователей, чтобы улучшить продукт.</p>
+          </div>
+        </div>
+        <div class="faq-column">
+          <div class="faq-item">
+            <h4>Какие карты поддерживаются?</h4>
+            <p>Любые. Вы вводите название карты (например, "Сбер", "Альфа") вручную, поэтому ограничений нет.</p>
+          </div>
+          <div class="faq-item">
+            <h4>Что требуется от тестера?</h4>
+            <p>Пользоваться приложением пару недель и дать честную обратную связь: что удобно, а что — нет.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- CTA FORM (YANDEX OFFICIAL EMBED) -->
+<section id="join" class="section-cta">
+  <div class="container cta-container">
+    <h2 style="font-size: 32px; margin-bottom: 16px;">Присоединяйтесь к закрытому тесту</h2>
+    <p style="color: #94A3B8; font-size: 18px;">Помогите нам сделать идеальный инструмент для кэшбэка и получите ранний доступ.</p>
+    
+    <div class="cta-form">
+      
+      <!-- КОД ВСТАВКИ ЯНДЕКСА -->
+      <script src="https://forms.yandex.ru/_static/embed.js"></script>
+      <iframe 
+        src="https://forms.yandex.ru/u/6925bb30eb6146b47690095a/?iframe=1" 
+        frameborder="0" 
+        name="ya-form-6925bb30eb6146b47690095a" 
+        width="650"
+        style="width: 100%; max-width: 100%;"
+      ></iframe>
+      <!-- КОНЕЦ КОДА ВСТАВКИ -->
+
+    </div>
+    
+    <p style="margin-top: 32px; font-size: 14px; color: #64748B;">© 2025 CashBack Guide MVP</p>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          document.querySelector(this.getAttribute('href')).scrollIntoView({
+              behavior: 'smooth'
+          });
+      });
+  });
+</script>
+
+</body>
+</html>
