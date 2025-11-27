@@ -579,7 +579,7 @@
 
 <script>
   // ЗАМЕНИТЕ 'YOUR_WEB_APP_URL' на реальный URL вашего веб-приложения
-  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby7DXViCJ72XKa1wSjFD-NZFvv2uwLeUhEwIlGnOmY_xHh-s_QMulNaUgqSGelVaoqR/exec';
+  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyNN2FMXzbLD0T3RuBmfJ7v_Tn9ijGQXoBD8vdEhbEM_2ct40_TWQnYs4THljKBPL9R/exec';
 
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function (e) {
@@ -590,7 +590,7 @@
       });
   });
 
-  document.getElementById('application-form').addEventListener('submit', async function(e) {
+  document.getElementById('application-form').addEventListener('submit', function(e) {
     e.preventDefault();
     
     const submitBtn = this.querySelector('button[type="submit"]');
@@ -601,39 +601,31 @@
     submitBtn.disabled = true;
     
     // Собираем данные формы
-    const formData = {
-      contact: document.getElementById('contact').value,
-      cardsCount: document.querySelector('input[name="cards"]:checked').value,
-      scenario: document.getElementById('scenario').value
-    };
+    const contact = document.getElementById('contact').value;
+    const cardsCount = document.querySelector('input[name="cards"]:checked').value;
+    const scenario = document.getElementById('scenario').value;
     
-    try {
-      const response = await fetch(WEB_APP_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData)
-      });
-      
-      const result = await response.json();
-      
-      if (result.status === 'success') {
-        // Успешная отправка
-        document.getElementById('application-form').style.display = 'none';
-        document.getElementById('success-msg').style.display = 'block';
-        document.getElementById('error-msg').style.display = 'none';
-      } else {
-        // Ошибка от сервера
-        throw new Error(result.message);
-      }
-      
-    } catch (error) {
-      console.error('Error:', error);
+    // Создаем URL с параметрами
+    const formUrl = WEB_APP_URL + 
+      '?contact=' + encodeURIComponent(contact) +
+      '&cardsCount=' + encodeURIComponent(cardsCount) +
+      '&scenario=' + encodeURIComponent(scenario || '');
+    
+    // Открываем в новом окне/вкладке
+    const newWindow = window.open(formUrl, 'cashbackForm', 'width=500,height=400');
+    
+    // Проверяем, не заблокировано ли всплывающее окно
+    if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
+      // Если всплывающие окна заблокированы, показываем ошибку
       document.getElementById('error-msg').style.display = 'block';
-      document.getElementById('error-msg').textContent = 'Ошибка: ' + error.message;
-    } finally {
-      // Восстанавливаем кнопку
+      document.getElementById('error-msg').textContent = 'Пожалуйста, разрешите всплывающие окна для этого сайта';
+      submitBtn.textContent = originalText;
+      submitBtn.disabled = false;
+    } else {
+      // Успешная отправка (предполагаем успех при открытии окна)
+      document.getElementById('application-form').style.display = 'none';
+      document.getElementById('success-msg').style.display = 'block';
+      document.getElementById('error-msg').style.display = 'none';
       submitBtn.textContent = originalText;
       submitBtn.disabled = false;
     }
