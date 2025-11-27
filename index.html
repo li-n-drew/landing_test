@@ -528,64 +528,45 @@
 
 </div>
 
-<!-- CTA FORM (CUSTOM DESIGN -> YANDEX BACKEND) -->
+<!-- CTA FORM -->
 <section id="join" class="section-cta">
   <div class="container cta-container">
     <h2 style="font-size: 32px; margin-bottom: 16px;">Присоединяйтесь к закрытому тесту</h2>
-    <p style="color: #94A3B8; font-size: 18px;">Помогите нам сделать идеальный инструмент для кэшбэка.</p>
+    <p style="color: #94A3B8; font-size: 18px;">Помогите нам сделать идеальный инструмент для кэшбэка и получите ранний доступ.</p>
     
     <div class="cta-form">
-      
-      <!-- Hidden Iframe for Submission -->
-      <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
-
-      <!-- FORM -->
-      <form 
-        action="https://forms.yandex.ru/u/6925bb30eb6146b47690095a/save/" 
-        method="POST" 
-        target="hidden_iframe"
-        onsubmit="document.getElementById('form-content').style.display='none'; document.getElementById('success-msg').style.display='block';"
-        id="form-content"
-      >
-        
-        <!-- Field: Contact -->
+      <form id="application-form">
         <div class="form-group">
           <label class="form-label">Ваш Email или Telegram</label>
-          <input type="text" name="answer_short_text_9008963335323730" class="form-input" placeholder="@username или mail@example.com" required>
+          <input type="text" id="contact" name="contact" class="form-input" placeholder="@username или mail@example.com" required>
         </div>
         
-        <!-- Field: Card Count -->
         <div class="form-group">
           <label class="form-label">Сколько у вас карт с кэшбэком?</label>
           <div class="radio-group">
-            <label class="radio-label">
-              <input type="radio" name="answer_choices_9008963335479804" value="9008963335479814"> 1
-            </label>
-            <label class="radio-label">
-              <input type="radio" name="answer_choices_9008963335479804" value="1764080756297" checked> 2-3
-            </label>
-            <label class="radio-label">
-              <input type="radio" name="answer_choices_9008963335479804" value="1764080760356"> 4+
-            </label>
+            <label class="radio-label"><input type="radio" name="cards" value="1"> 1</label>
+            <label class="radio-label"><input type="radio" name="cards" value="2-3" checked> 2-3</label>
+            <label class="radio-label"><input type="radio" name="cards" value="4+"> 4+</label>
           </div>
         </div>
 
-        <!-- Field: Scenario -->
         <div class="form-group">
           <label class="form-label">Пара слов о вашем сценарии (необязательно)</label>
-          <input type="text" name="answer_short_text_9008963335681570" class="form-input" placeholder="Например: часто хожу в кафе и аптеки">
+          <input type="text" id="scenario" name="scenario" class="form-input" placeholder="Например: часто хожу в кафе и аптеки">
         </div>
 
         <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 16px;">Отправить заявку</button>
       </form>
       
-      <!-- Success Message -->
       <div id="success-msg" style="display: none; text-align: center; padding: 40px 0;">
         <div style="font-size: 48px; margin-bottom: 16px;">🎉</div>
         <h3 style="color: #0F172A; margin-bottom: 8px;">Спасибо за заявку!</h3>
-        <p style="color: #64748B;">Данные успешно отправлены.</p>
+        <p style="color: #64748B;">Мы свяжемся с вами в ближайшее время.</p>
       </div>
-      
+
+      <div id="error-msg" style="display: none; text-align: center; padding: 20px; background: #FEF2F2; color: #DC2626; border-radius: 8px; margin-top: 16px;">
+        Произошла ошибка при отправке. Пожалуйста, попробуйте еще раз.
+      </div>
     </div>
     
     <p style="margin-top: 32px; font-size: 14px; color: #64748B;">© 2025 CashBack Guide MVP</p>
@@ -593,13 +574,56 @@
 </section>
 
 <script>
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-          e.preventDefault();
-          document.querySelector(this.getAttribute('href')).scrollIntoView({
-              behavior: 'smooth'
-          });
+  // ЗАМЕНИТЕ 'YOUR_WEB_APP_URL' на реальный URL вашего веб-приложения
+  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby7DXViCJ72XKa1wSjFD-NZFvv2uwLeUhEwIlGnOmY_xHh-s_QMulNaUgqSGelVaoqR/exec';
+
+  document.getElementById('application-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    
+    // Показываем загрузку
+    submitBtn.textContent = 'Отправка...';
+    submitBtn.disabled = true;
+    
+    // Собираем данные формы
+    const formData = {
+      contact: document.getElementById('contact').value,
+      cardsCount: document.querySelector('input[name="cards"]:checked').value,
+      scenario: document.getElementById('scenario').value
+    };
+    
+    try {
+      const response = await fetch(WEB_APP_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
       });
+      
+      const result = await response.json();
+      
+      if (result.status === 'success') {
+        // Успешная отправка
+        document.getElementById('application-form').style.display = 'none';
+        document.getElementById('success-msg').style.display = 'block';
+        document.getElementById('error-msg').style.display = 'none';
+      } else {
+        // Ошибка от сервера
+        throw new Error(result.message);
+      }
+      
+    } catch (error) {
+      console.error('Error:', error);
+      document.getElementById('error-msg').style.display = 'block';
+      document.getElementById('error-msg').textContent = 'Ошибка: ' + error.message;
+    } finally {
+      // Восстанавливаем кнопку
+      submitBtn.textContent = originalText;
+      submitBtn.disabled = false;
+    }
   });
 </script>
 
