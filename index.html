@@ -605,6 +605,15 @@
     const cardsCount = document.querySelector('input[name="cards"]:checked').value;
     const scenario = document.getElementById('scenario').value;
     
+    // Валидация
+    if (!contact) {
+      document.getElementById('error-msg').style.display = 'block';
+      document.getElementById('error-msg').textContent = 'Пожалуйста, укажите email или Telegram';
+      submitBtn.textContent = originalText;
+      submitBtn.disabled = false;
+      return;
+    }
+    
     // Создаем URL с параметрами
     const formUrl = WEB_APP_URL + 
       '?contact=' + encodeURIComponent(contact) +
@@ -622,12 +631,14 @@
       submitBtn.textContent = originalText;
       submitBtn.disabled = false;
     } else {
-      // Успешная отправка (предполагаем успех при открытии окна)
-      document.getElementById('application-form').style.display = 'none';
-      document.getElementById('success-msg').style.display = 'block';
-      document.getElementById('error-msg').style.display = 'none';
-      submitBtn.textContent = originalText;
-      submitBtn.disabled = false;
+      // Успешная отправка
+      setTimeout(function() {
+        document.getElementById('application-form').style.display = 'none';
+        document.getElementById('success-msg').style.display = 'block';
+        document.getElementById('error-msg').style.display = 'none';
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+      }, 1000);
     }
   });
 </script>
