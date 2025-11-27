@@ -15,9 +15,11 @@
       /* Светлая палитра */
       --bg-body: #FFFFFF;
       --bg-soft: #F8FAFC;
+      --bg-card: #FFFFFF;
       
       --text-main: #0F172A;
       --text-secondary: #475569;
+      --text-accent: #2563EB;
       
       --primary: #2563EB;
       --primary-hover: #1D4ED8;
@@ -107,7 +109,7 @@
 
     /* HERO SECTION */
     .hero {
-      padding: 80px 0 40px;
+      padding: 80px 0 60px;
       background: radial-gradient(circle at 50% 0%, #EFF6FF 0%, transparent 70%);
       overflow: hidden;
     }
@@ -149,25 +151,21 @@
       display: flex; align-items: center; justify-content: center; font-size: 12px;
     }
 
-    /* --- PHONE MOCKUP --- */
     .phone-mockup {
       background: #FFFFFF;
       border-radius: 40px 40px 0 0;
       border: 8px solid #E2E8F0;
       border-bottom: none;
-      /* Тень смещена влево */
-      box-shadow: -25px 40px 80px -15px rgba(50, 60, 85, 0.25);
+      box-shadow: -20px 30px 60px -10px rgba(50, 60, 85, 0.2);
       padding: 16px 16px 0 16px;
       width: 100%;
       max-width: 340px;
       margin: 0 auto;
-      height: 500px; 
-      overflow: hidden; 
+      height: 500px;
+      overflow: hidden;
       position: relative;
-      
-      /* Наклон вправо (6deg), экран смотрит влево (-20deg), наклон от себя (10deg) */
-      transform: perspective(1000px) rotate(6deg) rotateY(-20deg) rotateX(10deg) translateY(20px);
-      transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+      transform: perspective(1000px) rotate(4deg) rotateY(-10deg) rotateX(10deg) translateY(20px);
+      transition: transform 0.5s ease;
     }
     
     .phone-mockup:hover { 
@@ -176,19 +174,18 @@
     
     .app-screen {
       background: #F1F5F9;
-      height: 100%; 
+      height: 100%;
       border-radius: 24px 24px 0 0;
       display: flex;
       flex-direction: column;
       position: relative;
     }
-    /* Fade-out эффект внизу */
     .app-screen::after {
       content: "";
       position: absolute;
       bottom: 0; left: 0; right: 0;
-      height: 150px;
-      background: linear-gradient(to bottom, rgba(241,245,249,0) 0%, rgba(241,245,249,1) 90%);
+      height: 120px;
+      background: linear-gradient(to bottom, rgba(241,245,249,0) 0%, rgba(241,245,249,1) 100%);
       pointer-events: none;
     }
 
@@ -227,7 +224,6 @@
       font-size: 12px; font-weight: 700;
     }
 
-    /* --- FEATURES GRID --- */
     .section-features {
       padding: 80px 0;
       background: var(--bg-body);
@@ -248,7 +244,7 @@
 
     .feature-grid {
       display: grid;
-      grid-template-columns: 1fr; 
+      grid-template-columns: 1fr;
       gap: 32px;
     }
     
@@ -260,7 +256,7 @@
 
     .feature-card {
       background: var(--bg-soft);
-      padding: 40px; 
+      padding: 40px;
       border-radius: var(--radius-xl);
       transition: all 0.3s;
       border: 1px solid transparent;
@@ -284,10 +280,16 @@
       box-shadow: var(--shadow-sm);
       color: var(--primary);
     }
-    .feature-card h3 { font-size: 22px; margin-bottom: 12px; }
-    .feature-card p { font-size: 16px; line-height: 1.6; color: var(--text-secondary); }
+    .feature-card h3 {
+      font-size: 22px;
+      margin-bottom: 12px;
+    }
+    .feature-card p {
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+    }
 
-    /* AUDIENCE & FAQ */
     .section-audience {
       padding: 80px 0;
       background: #F8FAFC;
@@ -295,14 +297,20 @@
       border-bottom: 1px solid var(--border);
     }
     .audience-list {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 40px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+      margin-top: 40px;
     }
     .audience-item h3 {
-      font-size: 18px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+      font-size: 18px; margin-bottom: 12px;
+      display: flex; align-items: center; gap: 8px;
     }
     .check-circle {
-      width: 20px; height: 20px; background: var(--primary); color: white;
-      border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px;
+      width: 20px; height: 20px;
+      background: var(--primary); color: white;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; font-size: 10px;
     }
 
     .section-faq { padding: 80px 0; }
@@ -311,7 +319,6 @@
     .faq-item h4 { font-size: 16px; margin-bottom: 8px; color: var(--text-main); }
     .faq-item p { font-size: 14px; color: var(--text-secondary); }
 
-    /* --- CTA FORM SECTION --- */
     .section-cta {
       background: #1E293B;
       color: white;
@@ -394,7 +401,6 @@
             <span>🔋 100%</span>
           </div>
           <div class="app-body">
-            <!-- Гео уведомление -->
             <div class="ui-card" style="background: #EFF6FF; border: 1px solid #BFDBFE;">
               <div class="ui-icon">📍</div>
               <div class="ui-text">
@@ -403,7 +409,6 @@
               </div>
             </div>
 
-            <!-- Карточка рекомендации -->
             <div class="ui-card">
               <div class="ui-icon" style="background: #000; color: #FFF;">💳</div>
               <div class="ui-text">
@@ -413,7 +418,6 @@
               <div class="ui-badge">+150₽</div>
             </div>
 
-            <!-- Поиск -->
             <div style="margin-top: 8px;">
               <div style="font-size: 12px; color: #64748B; margin-bottom: 8px; font-weight: 600;">БЫСТРЫЙ ПОИСК</div>
               <div class="ui-card" style="color: #94A3B8;">
@@ -421,7 +425,6 @@
               </div>
             </div>
             
-            <!-- Fading element -->
             <div style="margin-top: 12px; background: white; padding: 16px; border-radius: 16px; opacity: 0.8;">
                <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
                 <span style="font-size:12px; font-weight:600;">Ваша выгода</span>
@@ -443,6 +446,7 @@
       <div class="section-header">
         <span class="tag">Возможности</span>
         <h2>Что уже умеет приложение</h2>
+        <p style="color: var(--text-secondary);">Мы запустили MVP с 4 ключевыми функциями для оптимизации ваших финансов</p>
       </div>
 
       <div class="feature-grid">
@@ -467,7 +471,7 @@
         <div class="feature-card">
           <div class="feature-icon-lg">📈</div>
           <h3>Калькулятор выгоды</h3>
-          <p>Мы посчитаем максимальный потенциальный кэшбэк исходя из ваших лимитов и трат. Узнайте, какую сумму можно получить, если оптимизировать траты.</p>
+          <p>Мы посчитаем максимальный потенциальный кэшбэк исходя из ваших лимитов и трат. Узнайте, какую выгоду можно получить, если оптимизировать траты.</p>
         </div>
       </div>
     </div>
@@ -576,6 +580,15 @@
 <script>
   // ЗАМЕНИТЕ 'YOUR_WEB_APP_URL' на реальный URL вашего веб-приложения
   const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby7DXViCJ72XKa1wSjFD-NZFvv2uwLeUhEwIlGnOmY_xHh-s_QMulNaUgqSGelVaoqR/exec';
+
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          document.querySelector(this.getAttribute('href')).scrollIntoView({
+              behavior: 'smooth'
+          });
+      });
+  });
 
   document.getElementById('application-form').addEventListener('submit', async function(e) {
     e.preventDefault();
