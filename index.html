@@ -619,8 +619,8 @@
       return;
     }
     
+    // Пытаемся отправить через fetch (основной метод)
     try {
-      // Отправляем данные напрямую через POST
       const response = await fetch(WEB_APP_URL, {
         method: 'POST',
         headers: {
@@ -633,40 +633,23 @@
       
       if (result.status === 'success') {
         // Успешная отправка
-        document.getElementById('application-form').style.display = 'none';
-        document.getElementById('success-msg').style.display = 'block';
-        document.getElementById('error-msg').style.display = 'none';
+        showSuccess();
       } else {
         // Ошибка от сервера
         throw new Error(result.message);
       }
       
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Fetch error:', error);
       
-      // Если CORS ошибка, используем альтернативный метод
-      if (error.message.includes('Failed to fetch') || error.message.includes('CORS')) {
-        // Создаем скрытую форму для отправки
-        const hiddenForm = document.createElement('form');
-        hiddenForm.method = 'POST';
-        hiddenForm.action = WEB_APP_URL;
-        hiddenForm.target = '_blank';
-        hiddenForm.style.display = 'none';
-        
-        const dataInput = document.createElement('input');
-        dataInput.name = 'data';
-        dataInput.value = JSON.stringify(formData);
-        hiddenForm.appendChild(dataInput);
-        
-        document.body.appendChild(hiddenForm);
-        hiddenForm.submit();
-        
-        // Показываем успех (предполагаем, что отправка прошла)
-        document.getElementById('application-form').style.display = 'none';
-        document.getElementById('success-msg').style.display = 'block';
-      } else {
+      // Если не получилось через fetch, пробуем альтернативный метод
+      try {
+        await submitWithAlternativeMethod(formData);
+        showSuccess();
+      } catch (altError) {
+        console.error('Alternative method error:', altError);
         document.getElementById('error-msg').style.display = 'block';
-        document.getElementById('error-msg').textContent = 'Ошибка: ' + error.message;
+        document.getElementById('error-msg').textContent = 'Ошибка отправки: ' + error.message;
       }
     } finally {
       // Восстанавливаем кнопку
@@ -674,6 +657,69 @@
       submitBtn.disabled = false;
     }
   });
+
+  // Альтернативный метод отправки - через создание формы
+  function submitWithAlternativeMethod(formData) {
+    return new Promise((resolve, reject) => {
+      // Создаем скрытую форму
+      const hiddenForm = document.createElement('form');
+      hiddenForm.method = 'POST';
+      hiddenForm.action = WEB_APP_URL;
+      hiddenForm.style.display = 'none';
+      
+      // Добавляем поля формы
+      Object.keys(formData).forEach(key => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = key;
+        input.value = formData[key];
+        hiddenForm.appendChild(input);
+      });
+      
+      document.body.appendChild(hiddenForm);
+      
+      // Создаем iframe для получения ответа
+      const iframe = document.createElement('iframe');
+      iframe.name = 'form-response';
+      iframe.style.display = 'none';
+      iframe.onload = function() {
+        try {
+          // Пытаемся прочитать ответ из iframe
+          const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+          const responseText = iframeDoc.body.textContent || iframeDoc.body.innerText;
+          
+          if (responseText) {
+            const result = JSON.parse(responseText);
+            if (result.status === 'success') {
+              resolve(result);
+            } else {
+              reject(new Error(result.message));
+            }
+          } else {
+            // Если не можем прочитать ответ, считаем успешным
+            resolve({status: 'success', message: 'Form submitted'});
+          }
+        } catch (error) {
+          // Если не можем разобрать ответ, считаем успешным
+          resolve({status: 'success', message: 'Form submitted'});
+        }
+        
+        // Убираем форму и iframe
+        document.body.removeChild(hiddenForm);
+        document.body.removeChild(iframe);
+      };
+      
+      document.body.appendChild(iframe);
+      hiddenForm.target = 'form-response';
+      hiddenForm.submit();
+    });
+  }
+
+  function showSuccess() {
+    document.getElementById('application-form').style.display = 'none';
+    document.getElementById('success-msg').style.display = 'block';
+    document.getElementById('error-msg').style.display = 'none';
+  }
 </script>
 
 </body>
