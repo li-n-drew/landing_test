@@ -578,85 +578,89 @@
 </section>
 
 <script>
-  // ЗАМЕНИТЕ 'YOUR_WEB_APP_URL' на реальный URL вашего веб-приложения
-  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzUUE8qEV_eEMElSWl3Zyd1RAnF3yWOkVTAuvrNokn_9V_Sl3ezooYp-7O5Lmf2RYCb/exec';
+  // ВСТАВЬ сюда реальный URL веб-приложения Apps Script
+  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzX4DdP7A87Jh4Yyz9pEpSMecoZiz5CaNJ4fx9Mdk0-EMBJi9alRSkV6_VxUXsUL4Si/exec';
 
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-          e.preventDefault();
-          document.querySelector(this.getAttribute('href')).scrollIntoView({
-              behavior: 'smooth'
-          });
-      });
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      document
+        .querySelector(this.getAttribute('href'))
+        .scrollIntoView({ behavior: 'smooth' });
+    });
   });
 
-  document.getElementById('application-form').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    const submitBtn = this.querySelector('button[type="submit"]');
-    const originalText = submitBtn.textContent;
-    
-    // Показываем загрузку
-    submitBtn.textContent = 'Отправка...';
-    submitBtn.disabled = true;
-    
-    // Скрываем предыдущие сообщения
-    document.getElementById('error-msg').style.display = 'none';
-    
-    // Собираем данные формы
-    const formData = {
-      contact: document.getElementById('contact').value.trim(),
-      cardsCount: document.querySelector('input[name="cards"]:checked').value,
-      scenario: document.getElementById('scenario').value.trim()
-    };
-    
-    // Валидация
-    if (!formData.contact) {
-      document.getElementById('error-msg').style.display = 'block';
-      document.getElementById('error-msg').textContent = 'Пожалуйста, укажите email или Telegram';
-      submitBtn.textContent = originalText;
-      submitBtn.disabled = false;
-      return;
-    }
-    
-    // Пытаемся отправить через fetch (основной метод)
-    try {
-      const response = await fetch(WEB_APP_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData)
-      });
-      
-      const result = await response.json();
-      
-      if (result.status === 'success') {
-        // Успешная отправка
-        showSuccess();
-      } else {
-        // Ошибка от сервера
-        throw new Error(result.message);
-      }
-      
-    } catch (error) {
-      console.error('Fetch error:', error);
-      
-      // Если не получилось через fetch, пробуем альтернативный метод
-      try {
-        await submitWithAlternativeMethod(formData);
-        showSuccess();
-      } catch (altError) {
-        console.error('Alternative method error:', altError);
+  document
+    .getElementById('application-form')
+    .addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const submitBtn = this.querySelector('button[type="submit"]');
+      const originalText = submitBtn.textContent;
+
+      // Показываем загрузку
+      submitBtn.textContent = 'Отправка...';
+      submitBtn.disabled = true;
+
+      // Скрываем предыдущие сообщения
+      document.getElementById('error-msg').style.display = 'none';
+
+      // Собираем данные формы
+      const formData = {
+        contact: document.getElementById('contact').value.trim(),
+        cardsCount: document.querySelector('input[name="cards"]:checked').value,
+        scenario: document.getElementById('scenario').value.trim()
+      };
+
+      // Валидация
+      if (!formData.contact) {
         document.getElementById('error-msg').style.display = 'block';
-        document.getElementById('error-msg').textContent = 'Ошибка отправки: ' + error.message;
+        document.getElementById('error-msg').textContent =
+          'Пожалуйста, укажите email или Telegram';
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+        return;
       }
-    } finally {
-      // Восстанавливаем кнопку
-      submitBtn.textContent = originalText;
-      submitBtn.disabled = false;
-    }
-  });
+
+      // Пытаемся отправить через fetch (основной метод)
+      try {
+        const response = await fetch(WEB_APP_URL, {
+          method: 'POST',
+          // Критично: простой запрос без application/json
+          headers: {
+            'Content-Type': 'text/plain;charset=utf-8'
+          },
+          body: JSON.stringify(formData)
+        });
+
+        const result = await response.json();
+
+        if (result.status === 'success') {
+          // Успешная отправка
+          showSuccess();
+        } else {
+          // Ошибка от сервера
+          throw new Error(result.message || 'Server error');
+        }
+      } catch (error) {
+        console.error('Fetch error:', error);
+
+        // Если не получилось через fetch, пробуем альтернативный метод
+        try {
+          await submitWithAlternativeMethod(formData);
+          showSuccess();
+        } catch (altError) {
+          console.error('Alternative method error:', altError);
+          document.getElementById('error-msg').style.display = 'block';
+          document.getElementById('error-msg').textContent =
+            'Ошибка отправки: ' + (error.message || 'Unknown error');
+        }
+      } finally {
+        // Восстанавливаем кнопку
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+      }
+    });
 
   // Альтернативный метод отправки - через создание формы
   function submitWithAlternativeMethod(formData) {
@@ -666,7 +670,7 @@
       hiddenForm.method = 'POST';
       hiddenForm.action = WEB_APP_URL;
       hiddenForm.style.display = 'none';
-      
+
       // Добавляем поля формы
       Object.keys(formData).forEach(key => {
         const input = document.createElement('input');
@@ -675,40 +679,41 @@
         input.value = formData[key];
         hiddenForm.appendChild(input);
       });
-      
+
       document.body.appendChild(hiddenForm);
-      
+
       // Создаем iframe для получения ответа
       const iframe = document.createElement('iframe');
       iframe.name = 'form-response';
       iframe.style.display = 'none';
-      iframe.onload = function() {
+      iframe.onload = function () {
         try {
           // Пытаемся прочитать ответ из iframe
           const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-          const responseText = iframeDoc.body.textContent || iframeDoc.body.innerText;
-          
+          const responseText =
+            iframeDoc.body.textContent || iframeDoc.body.innerText;
+
           if (responseText) {
             const result = JSON.parse(responseText);
             if (result.status === 'success') {
               resolve(result);
             } else {
-              reject(new Error(result.message));
+              reject(new Error(result.message || 'Server error'));
             }
           } else {
             // Если не можем прочитать ответ, считаем успешным
-            resolve({status: 'success', message: 'Form submitted'});
+            resolve({ status: 'success', message: 'Form submitted' });
           }
         } catch (error) {
           // Если не можем разобрать ответ, считаем успешным
-          resolve({status: 'success', message: 'Form submitted'});
+          resolve({ status: 'success', message: 'Form submitted' });
         }
-        
+
         // Убираем форму и iframe
         document.body.removeChild(hiddenForm);
         document.body.removeChild(iframe);
       };
-      
+
       document.body.appendChild(iframe);
       hiddenForm.target = 'form-response';
       hiddenForm.submit();
